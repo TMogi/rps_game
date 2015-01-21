@@ -1,28 +1,42 @@
-== README
+ジャンケン格闘ゲーム(仮)
+==================
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+概要
+----
 
-Things you may want to cover:
+コマンド入力式の格闘ゲームです.
+かっこいいUIの実装には至ってません…
 
-* Ruby version
+起動準備
+----
 
-* System dependencies
+## ■Redis起動
 
-* Configuration
++ homebrewなどでRedisをローカル環境にインストールして下さい.
++ 起動
 
-* Database creation
+```
+$ redis-server
+```
 
-* Database initialization
+## ■本体起動
 
-* How to run the test suite
++ 準備
 
-* Services (job queues, cache servers, search engines, etc.)
+```
+$ bundle install --path vendor/bundle
+$ budle exec rake db:migrate
+$ bundle exec rake db:seed
+```
 
-* Deployment instructions
++ ブラウザからアクセス
 
-* ...
+```
+http://localhost:3000/game/自分のキャラ名/vs/相手キャラ名/
+例) http://localhost:3000/game/社畜さん/vs/きのこ先生/
+```
 
+## ■プレイヤーの追加
 
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
++ `db/seeds.rb`を編集後に`bundle exec rake db:seed`を実行して下さい.
+
