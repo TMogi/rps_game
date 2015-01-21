@@ -1,0 +1,68 @@
+<div class="jumbotron">
+<% b = BattleState.new %>
+<% if @results %>
+  <div><%= "#{@offense_player}の攻撃" %></div>
+  <div class="alert alert-info" role="alert">
+  <% @results.each do |result| %>
+    <% case result when 1 %>
+      <% @player["hp"] -= 2 if @defence_player == @player["name"] %>
+      <% @enemy["hp"] -= 2 if @defence_player == @enemy["name"] %>
+      <div>CRITICAL!</div>
+    <% when 0 %>
+      <% @player["hp"] -= 1 if @defence_player == @player["name"] %>
+      <% @enemy["hp"] -= 1 if @defence_player == @enemy["name"] %>
+      <div>HIT!</div>
+    <% when -1 %>
+      <% @offense_player, @defence_player = @defence_player, @offense_player %>
+      <div>MISS!</div>
+    <% end %>
+
+    <% b.set_params(@player) %>
+    <% b.set_params(@enemy) %>
+  <% end %>
+  </div>
+<% end %>
+<div><%= "#{@player["name"]} (HP: #{@player["hp"]})" %></div>
+<div class="progress">
+  <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: <%= 100*@player["hp"]/@player["max_hp"] %>%">
+    <span class="sr-only">10% Complete (success)</span>
+  </div>
+</div>
+
+<div><%= "#{@enemy["name"]} (HP: #{@enemy["hp"]})" %></div>
+<div class="progress">
+  <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: <%= 100*@enemy["hp"]/@enemy["max_hp"] %>%">
+    <span class="sr-only">10% Complete (success)</span>
+  </div>
+</div>
+<br/>
+<div>
+  <%= "攻撃のアクションを選択してください" if @offense_player == @player["name"] %>
+  <%= "防御のアクションを選択してください" if @defence_player == @player["name"] %>
+</div>
+<%= form_tag("/game/#{@player["name"]}/vs/#{@enemy["name"]}/processing", :method => :post) do %>
+
+  <% 5.times do |idx|%>
+    <div>
+      <%= idx + 1 %>回目:　
+      <%= radio_button_tag "act[#{idx}]", '1', :checked %>グー　
+      <%= radio_button_tag "act[#{idx}]", '2' %>チョキ　
+      <%= radio_button_tag "act[#{idx}]", '3' %>パー　
+    </div>
+  <% end %>
+  <%= hidden_field_tag("offense", @offense_player) %>
+  <%= hidden_field_tag("defence", @defence_player) %>
+
+  <br/>
+
+  <div>
+    <%= submit_tag("たたかう", class: "btn btn-default") if @player["hp"] > 0 && @enemy["hp"] > 0 %>
+    <%= "YOU LOSE!" if @player["hp"] <= 0 %>
+    <%= "YOU WIN!" if @enemy["hp"] <= 0 %>
+    <% if @player["hp"] <= 0 || @enemy["hp"] <= 0 %>
+      <% b.del_params(@player["name"]) %>
+      <% b.del_params(@enemy["name"]) %>
+    <% end %>
+  </div>
+<% end %>
+</div>
