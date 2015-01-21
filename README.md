@@ -10,7 +10,7 @@
 起動準備
 ----
 
-## ■Redis起動
+### ■Redis起動
 
 + homebrewなどでRedisをローカル環境にインストールして下さい.
 + 起動
@@ -19,7 +19,7 @@
 $ redis-server
 ```
 
-## ■本体起動
+### ■本体起動
 
 + 準備
 
@@ -27,6 +27,10 @@ $ redis-server
 $ bundle install --path vendor/bundle
 $ budle exec rake db:migrate
 $ bundle exec rake db:seed
+```
++ 起動
+```
+$ bundle exec rails s
 ```
 
 + ブラウザからアクセス
@@ -36,7 +40,7 @@ http://localhost:3000/game/自分のキャラ名/vs/相手キャラ名/
 例) http://localhost:3000/game/社畜さん/vs/きのこ先生/
 ```
 
-## ■プレイヤーの追加
+### ■プレイヤーの追加
 
 + `db/seeds.rb`を編集後に`bundle exec rake db:seed`を実行して下さい.
 
